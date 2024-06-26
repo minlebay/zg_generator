@@ -29,6 +29,7 @@ func NewConfig() (ResultConfig, error) {
 		return ResultConfig{}, err
 	}
 
+	// TODO it's smells
 	stringMap := convertMapKeysToStrings(yamlConfig)
 	replaceEnvVariables(stringMap)
 

@@ -7,7 +7,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 	"zg_generator/internal/app/grpc_client"
-	"zg_generator/internal/model"
 	"zg_generator/pkg/message_v1/router"
 )
 
@@ -55,28 +54,15 @@ func (g *Generator) StopGenerator() {
 }
 
 func (g *Generator) GenerateMessage() {
-	// TODO implement the business logic of GenerateMessage
-	m := &model.Message{
-		UUID:        uuid.NewString(),
+	in := &router.Message{
+		Uuid:        uuid.NewString(),
 		ContentType: "text/plain",
-		MessageContent: model.MessageContent{
-			SendAt:   time.Now(),
+		MessageContent: &router.MessageContent{
+			SendAt:   timestamppb.New(time.Now()),
 			Provider: "default provider",
 			Consumer: "default consumer",
 			Title:    "default title",
 			Content:  "this is default content",
-		},
-	}
-
-	in := &router.Message{
-		Uuid:        m.UUID,
-		ContentType: m.ContentType,
-		MessageContent: &router.MessageContent{
-			SendAt:   timestamppb.New(m.MessageContent.SendAt),
-			Provider: m.MessageContent.Provider,
-			Consumer: m.MessageContent.Consumer,
-			Title:    m.MessageContent.Title,
-			Content:  m.MessageContent.Content,
 		},
 	}
 
