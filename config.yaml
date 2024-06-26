@@ -8,4 +8,4 @@ generator:
   count: 3
 
 grpc_client:
-  router_address: localhost:50051
+  router_address: ${GRPC_SERVER_LISTEN_ADDRESS}
