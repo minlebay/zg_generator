@@ -1,0 +1,11 @@
+telemetry:
+  enabled: true
+  interval: 10s
+  address: localhost:8888
+
+generator:
+  interval: 5
+  count: 3
+
+grpc_client:
+  router_address: localhost:50051
