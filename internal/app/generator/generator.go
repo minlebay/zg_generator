@@ -31,7 +31,6 @@ func NewGenerator(logger *zap.Logger, config *Config, client *grpc_client.Client
 func (g *Generator) StartGenerator(ctx context.Context) {
 	ticker := time.NewTicker(time.Duration(g.Config.Interval) * time.Second)
 	go func() {
-
 		for {
 			select {
 			case <-ticker.C:
@@ -69,8 +68,7 @@ func (g *Generator) GenerateMessage(ctx context.Context) {
 		},
 	}
 
-	// TODO retry is needed
-	resp, err := g.Client.GrpcClient.ReceiveMessage(ctx, in)
+	resp, err := g.Client.GrpcClient.ReceiveMessage(context.Background(), in)
 	if err != nil {
 		g.Logger.Error("failed to send message", zap.Error(err))
 		return
