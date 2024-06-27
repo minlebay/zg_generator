@@ -66,6 +66,7 @@ func (g *Generator) GenerateMessage() {
 		},
 	}
 
+	// TODO retry is needed
 	resp, err := g.Client.GrpcClient.ReceiveMessage(context.Background(), in)
 	if err != nil {
 		g.Logger.Error("failed to send message", zap.Error(err))
