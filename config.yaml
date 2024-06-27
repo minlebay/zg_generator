@@ -4,8 +4,8 @@ telemetry:
   address: localhost:8888
 
 generator:
-  interval: 1
-  count: 30
+  interval: 2
+  count: 3
 
 grpc_client:
   router_address: ${GRPC_SERVER_LISTEN_ADDRESS}

@@ -35,7 +35,7 @@ func (g *Generator) StartGenerator(ctx context.Context) {
 			select {
 			case <-ticker.C:
 				for i := 0; i < g.Config.Count; i++ {
-					go g.GenerateMessage(ctx)
+					go g.GenerateMessage(context.Background())
 				}
 			case <-g.Done:
 				ticker.Stop()
@@ -68,7 +68,7 @@ func (g *Generator) GenerateMessage(ctx context.Context) {
 		},
 	}
 
-	resp, err := g.Client.GrpcClient.ReceiveMessage(context.Background(), in)
+	resp, err := g.Client.GrpcClient.ReceiveMessage(ctx, in)
 	if err != nil {
 		g.Logger.Error("failed to send message", zap.Error(err))
 		return

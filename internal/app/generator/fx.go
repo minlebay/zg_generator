@@ -1,7 +1,6 @@
 package generator
 
 import (
-	"context"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
@@ -16,16 +15,7 @@ func NewModule() fx.Option {
 		),
 		fx.Invoke(
 			func(lc fx.Lifecycle, g *Generator) {
-				lc.Append(fx.Hook{
-					OnStart: func(ctx context.Context) error {
-						go g.StartGenerator(ctx)
-						return nil
-					},
-					OnStop: func(ctx context.Context) error {
-						g.StopGenerator(ctx)
-						return nil
-					},
-				})
+				lc.Append(fx.StartStopHook(g.StartGenerator, g.StopGenerator))
 			},
 		),
 		fx.Decorate(func(log *zap.Logger) *zap.Logger {
