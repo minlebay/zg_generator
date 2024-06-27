@@ -24,15 +24,17 @@ func NewClient(logger *zap.Logger, config *Config) *Client {
 }
 
 func (r *Client) StartClient(ctx context.Context) {
-	grpcTarget := fmt.Sprintf("%s", r.Config.RouterAddress)
+	go func() {
+		grpcTarget := fmt.Sprintf("%s", r.Config.RouterAddress)
 
-	conn, err := grpc.NewClient(grpcTarget, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		r.Logger.Fatal(err.Error())
-	}
+		conn, err := grpc.NewClient(grpcTarget, grpc.WithTransportCredentials(insecure.NewCredentials()))
+		if err != nil {
+			r.Logger.Fatal(err.Error())
+		}
 
-	r.Conn = conn
-	r.GrpcClient = router.NewMessageRouterClient(conn)
+		r.Conn = conn
+		r.GrpcClient = router.NewMessageRouterClient(conn)
+	}()
 }
 
 func (r *Client) StopClient(ctx context.Context) {

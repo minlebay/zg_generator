@@ -29,8 +29,8 @@ func NewGenerator(logger *zap.Logger, config *Config, client *grpc_client.Client
 }
 
 func (g *Generator) StartGenerator(ctx context.Context) {
-	ticker := time.NewTicker(time.Duration(g.Config.Interval) * time.Second)
 	go func() {
+		ticker := time.NewTicker(time.Duration(g.Config.Interval) * time.Second)
 		for {
 			select {
 			case <-ticker.C:
