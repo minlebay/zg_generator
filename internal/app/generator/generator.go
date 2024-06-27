@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"sync"
 	"time"
 	"zg_generator/internal/app/grpc_client"
 	"zg_generator/pkg/message_v1/router"
@@ -15,6 +16,7 @@ type Generator struct {
 	Logger *zap.Logger
 	Config *Config
 	Client *grpc_client.Client
+	wg     sync.WaitGroup
 }
 
 func NewGenerator(logger *zap.Logger, config *Config, client *grpc_client.Client) *Generator {
@@ -26,21 +28,19 @@ func NewGenerator(logger *zap.Logger, config *Config, client *grpc_client.Client
 	}
 }
 
-func (g *Generator) StartGenerator() {
-	g.Logger.Info("Generator started")
-
+func (g *Generator) StartGenerator(ctx context.Context) {
 	ticker := time.NewTicker(time.Duration(g.Config.Interval) * time.Second)
 	go func() {
+
 		for {
 			select {
 			case <-ticker.C:
 				for i := 0; i < g.Config.Count; i++ {
-					go g.GenerateMessage()
+					go g.GenerateMessage(ctx)
 				}
 			case <-g.Done:
 				ticker.Stop()
 				return
-
 			default:
 				continue
 			}
@@ -48,12 +48,15 @@ func (g *Generator) StartGenerator() {
 	}()
 }
 
-func (g *Generator) StopGenerator() {
-	g.Logger.Info("Generator stopped")
+func (g *Generator) StopGenerator(ctx context.Context) {
+	g.wg.Wait()
 	g.Done <- struct{}{}
 }
 
-func (g *Generator) GenerateMessage() {
+func (g *Generator) GenerateMessage(ctx context.Context) {
+	g.wg.Add(1)
+	defer g.wg.Done()
+
 	in := &router.Message{
 		Uuid:        uuid.NewString(),
 		ContentType: "text/plain",
@@ -67,7 +70,7 @@ func (g *Generator) GenerateMessage() {
 	}
 
 	// TODO retry is needed
-	resp, err := g.Client.GrpcClient.ReceiveMessage(context.Background(), in)
+	resp, err := g.Client.GrpcClient.ReceiveMessage(ctx, in)
 	if err != nil {
 		g.Logger.Error("failed to send message", zap.Error(err))
 		return

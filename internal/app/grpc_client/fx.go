@@ -17,12 +17,12 @@ func NewModule() fx.Option {
 		fx.Invoke(
 			func(lc fx.Lifecycle, g *Client) {
 				lc.Append(fx.Hook{
-					OnStart: func(context.Context) error {
-						go g.StartClient()
+					OnStart: func(ctx context.Context) error {
+						go g.StartClient(ctx)
 						return nil
 					},
-					OnStop: func(context.Context) error {
-						g.StopClient()
+					OnStop: func(ctx context.Context) error {
+						g.StopClient(ctx)
 						return nil
 					},
 				})

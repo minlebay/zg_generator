@@ -17,12 +17,12 @@ func NewModule() fx.Option {
 		fx.Invoke(
 			func(lc fx.Lifecycle, g *Generator) {
 				lc.Append(fx.Hook{
-					OnStart: func(context.Context) error {
-						go g.StartGenerator()
+					OnStart: func(ctx context.Context) error {
+						go g.StartGenerator(ctx)
 						return nil
 					},
-					OnStop: func(context.Context) error {
-						g.StopGenerator()
+					OnStop: func(ctx context.Context) error {
+						g.StopGenerator(ctx)
 						return nil
 					},
 				})

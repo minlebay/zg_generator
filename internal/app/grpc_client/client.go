@@ -1,6 +1,7 @@
 package grpc_client
 
 import (
+	"context"
 	"fmt"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -9,7 +10,6 @@ import (
 )
 
 type Client struct {
-	Done       chan struct{}
 	Logger     *zap.Logger
 	Config     *Config
 	GrpcClient router.MessageRouterClient
@@ -18,13 +18,12 @@ type Client struct {
 
 func NewClient(logger *zap.Logger, config *Config) *Client {
 	return &Client{
-		Done:   make(chan struct{}),
 		Logger: logger,
 		Config: config,
 	}
 }
 
-func (r *Client) StartClient() {
+func (r *Client) StartClient(ctx context.Context) {
 	grpcTarget := fmt.Sprintf("%s", r.Config.RouterAddress)
 
 	conn, err := grpc.NewClient(grpcTarget, grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -34,11 +33,8 @@ func (r *Client) StartClient() {
 
 	r.Conn = conn
 	r.GrpcClient = router.NewMessageRouterClient(conn)
-	r.Logger.Info("Client started")
 }
 
-func (r *Client) StopClient() {
+func (r *Client) StopClient(ctx context.Context) {
 	r.Conn.Close()
-	r.Logger.Info("Client stopped")
-	r.Done <- struct{}{}
 }
