@@ -1,16 +1,22 @@
 version: '3.8'
 
+networks:
+  local-net:
+    external: true
+
 services:
-  app:
+  zg_generator:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
     container_name: zg_generator
-    ports:
-      - "8888:8888"
-      - "50051:50051"
+    # ports:
+    #   - "8888:8888"
+    #   - "50051:50051"
     env_file:
-      - .env
+      - .env-docker
+    networks:
+      - local-net  
     volumes:
-      - .:/app
+      - ./zg_generator:/app
     restart: unless-stopped
