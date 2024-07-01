@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 	"zg_generator/internal/app/grpc_client"
-	"zg_generator/pkg/message_v1/router"
+	"zg_generator/pkg/message_v1"
 )
 
 type Generator struct {
@@ -56,10 +56,10 @@ func (g *Generator) GenerateMessage(ctx context.Context) {
 	g.wg.Add(1)
 	defer g.wg.Done()
 
-	in := &router.Message{
+	in := &message.Message{
 		Uuid:        uuid.NewString(),
 		ContentType: "text/plain",
-		MessageContent: &router.MessageContent{
+		MessageContent: &message.MessageContent{
 			SendAt:   timestamppb.New(time.Now()),
 			Provider: "default provider",
 			Consumer: "default consumer",

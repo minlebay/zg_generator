@@ -6,13 +6,13 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"zg_generator/pkg/message_v1/router"
+	"zg_generator/pkg/message_v1"
 )
 
 type Client struct {
 	Logger     *zap.Logger
 	Config     *Config
-	GrpcClient router.MessageRouterClient
+	GrpcClient message.MessageRouterClient
 	Conn       *grpc.ClientConn
 }
 
@@ -33,7 +33,7 @@ func (r *Client) StartClient(ctx context.Context) {
 		}
 
 		r.Conn = conn
-		r.GrpcClient = router.NewMessageRouterClient(conn)
+		r.GrpcClient = message.NewMessageRouterClient(conn)
 	}()
 }
 
