@@ -9,3 +9,6 @@ generator:
 
 grpc_client:
   router_address: ${GRPC_SERVER_LISTEN_ADDRESS}
+
+logstash:
+    url: ${LOGSTASH_URL}

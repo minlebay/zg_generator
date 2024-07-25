@@ -3,10 +3,10 @@ package app
 import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/fx"
-	"go.uber.org/zap"
 	"testing"
 	"zg_generator/internal/app/generator"
 	"zg_generator/internal/app/grpc_client"
+	"zg_generator/internal/app/log"
 )
 
 func TestValidateApp(t *testing.T) {
@@ -14,9 +14,9 @@ func TestValidateApp(t *testing.T) {
 		fx.Options(
 			generator.NewModule(),
 			grpc_client.NewModule(),
+			log.NewModule(),
 		),
 		fx.Provide(
-			zap.NewProduction,
 			NewConfig,
 		),
 	)

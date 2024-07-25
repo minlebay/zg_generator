@@ -2,9 +2,9 @@ package app
 
 import (
 	"go.uber.org/fx"
-	"go.uber.org/zap"
 	"zg_generator/internal/app/generator"
 	"zg_generator/internal/app/grpc_client"
+	"zg_generator/internal/app/log"
 )
 
 func NewApp() *fx.App {
@@ -12,9 +12,9 @@ func NewApp() *fx.App {
 		fx.Options(
 			generator.NewModule(),
 			grpc_client.NewModule(),
+			log.NewModule(),
 		),
 		fx.Provide(
-			zap.NewProduction,
 			NewConfig,
 		),
 	)
