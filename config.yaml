@@ -1,7 +1,5 @@
-telemetry:
-  enabled: true
-  interval: 10s
-  address: localhost:8888
+prometheus:
+  url: ${PROMETHEUS_URL}
 
 generator:
   interval: 2

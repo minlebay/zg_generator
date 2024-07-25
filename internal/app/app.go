@@ -5,6 +5,7 @@ import (
 	"zg_generator/internal/app/generator"
 	"zg_generator/internal/app/grpc_client"
 	"zg_generator/internal/app/log"
+	"zg_generator/internal/app/telemetry"
 )
 
 func NewApp() *fx.App {
@@ -13,6 +14,7 @@ func NewApp() *fx.App {
 			generator.NewModule(),
 			grpc_client.NewModule(),
 			log.NewModule(),
+			telemetry.NewModule(),
 		),
 		fx.Provide(
 			NewConfig,

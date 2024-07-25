@@ -1,8 +1,9 @@
 package grpc_client
 
 import (
-	"context"
 	"fmt"
+	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpcprometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -23,20 +24,30 @@ func NewClient(logger *zap.Logger, config *Config) *Client {
 	}
 }
 
-func (r *Client) StartClient(ctx context.Context) {
+func (r *Client) StartClient() {
 	go func() {
 		grpcTarget := fmt.Sprintf("%s", r.Config.RouterAddress)
 
-		conn, err := grpc.NewClient(grpcTarget, grpc.WithTransportCredentials(insecure.NewCredentials()))
+		conn, err := grpc.NewClient(
+			grpcTarget,
+			grpc.WithTransportCredentials(insecure.NewCredentials()),
+			grpc.WithUnaryInterceptor(grpcmiddleware.ChainUnaryClient(
+				grpcprometheus.UnaryClientInterceptor,
+			)),
+			grpc.WithStreamInterceptor(grpcmiddleware.ChainStreamClient(
+				grpcprometheus.StreamClientInterceptor,
+			)),
+		)
 		if err != nil {
 			r.Logger.Fatal(err.Error())
 		}
 
 		r.Conn = conn
 		r.GrpcClient = message.NewMessageRouterClient(conn)
+
 	}()
 }
 
-func (r *Client) StopClient(ctx context.Context) {
+func (r *Client) StopClient() {
 	r.Conn.Close()
 }
