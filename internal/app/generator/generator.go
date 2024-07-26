@@ -8,23 +8,31 @@ import (
 	"sync"
 	"time"
 	"zg_generator/internal/app/grpc_client"
+	"zg_generator/internal/app/telemetry"
 	"zg_generator/pkg/message_v1"
 )
 
 type Generator struct {
-	Done   chan struct{}
-	Logger *zap.Logger
-	Config *Config
-	Client *grpc_client.Client
-	wg     sync.WaitGroup
+	Done    chan struct{}
+	Logger  *zap.Logger
+	Config  *Config
+	Client  *grpc_client.Client
+	Metrics *telemetry.Metrics
+	wg      sync.WaitGroup
 }
 
-func NewGenerator(logger *zap.Logger, config *Config, client *grpc_client.Client) *Generator {
+func NewGenerator(
+	logger *zap.Logger,
+	config *Config,
+	client *grpc_client.Client,
+	metrics *telemetry.Metrics,
+) *Generator {
 	return &Generator{
-		Done:   make(chan struct{}),
-		Logger: logger,
-		Config: config,
-		Client: client,
+		Done:    make(chan struct{}),
+		Logger:  logger,
+		Config:  config,
+		Client:  client,
+		Metrics: metrics,
 	}
 }
 
@@ -74,5 +82,6 @@ func (g *Generator) GenerateMessage(ctx context.Context) {
 		return
 	}
 
+	g.Metrics.IncrementRequestCounter()
 	g.Logger.Info("message sent", zap.Bool("success", resp.Success))
 }
