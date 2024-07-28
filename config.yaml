@@ -1,9 +1,8 @@
 prometheus:
-#  url: ${PROMETHEUS_URL}
-  url: 192.168.1.5:21122
+  url: ${PROMETHEUS_URL}
 
 generator:
-  interval: 5
+  interval: 10
   count: 1
 
 grpc_client:
