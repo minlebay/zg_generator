@@ -13,7 +13,9 @@ services:
     env_file:
       - .env-docker
     networks:
-      - local-net  
+      - local-net
+    ports:
+      - "21122:21122"
     volumes:
       - ./zg_generator:/app
     restart: unless-stopped
