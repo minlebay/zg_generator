@@ -1,3 +1,5 @@
+--- 
+
 Message Generator and Router Project
 
 This project is designed to generate messages and route them through various servers using gRPC. The architecture includes several components like Prometheus for monitoring, ELK stack for logging, and more. The project was built for fun and to learn technologies.
@@ -95,3 +97,5 @@ Ensure to set the following environment variables in the .env-docker file:
     PROMETHEUS_URL: URL of the Prometheus server (e.g., 0.0.0.0:21122).
 
 This project is licensed under the MIT License.
+
+--- 
