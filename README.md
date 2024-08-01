@@ -1,6 +1,6 @@
 --- 
 
-Message Generator and Router Project
+Message Generator
 
 This project is designed to generate messages and route them through various servers using gRPC. The architecture includes several components like Prometheus for monitoring, ELK stack for logging, and more. The project was built for fun and to learn technologies.
 Project Architecture
@@ -16,40 +16,40 @@ Docker Compose Configuration:
 version: '3.8'
 
 networks:
-local-net:
-external: true
+    local-net:
+      external: true
 
 services:
-zg_generator:
-build:
-context: .
-dockerfile: ./Dockerfile
-container_name: zg_generator
-env_file:
-- .env-docker
-networks:
-- local-net
-ports:
-- "21122:21122"
-volumes:
-- ./zg_generator:/app
-restart: unless-stopped
+    zg_generator:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        container_name: zg_generator
+        env_file:
+        - .env-docker
+        networks:
+        - local-net
+        ports:
+        - "21122:21122"
+        volumes:
+        - ./zg_generator:/app
+        restart: unless-stopped
 ```
 Configuration File:
 
 ```yaml
 prometheus:
-url: ${PROMETHEUS_URL}
+  url: ${PROMETHEUS_URL}
 
 generator:
-interval: 10
-count: 1
+    interval: 10
+    count: 1
 
 grpc_client:
-router_address: ${GRPC_SERVER_LISTEN_ADDRESS}
+  router_address: ${GRPC_SERVER_LISTEN_ADDRESS}
 
 logstash:
-url: ${LOGSTASH_URL}
+  url: ${LOGSTASH_URL}
 ```
 .env-docker File:
 
