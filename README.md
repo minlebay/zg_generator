@@ -2,10 +2,10 @@
 
 Message Generator
 
-This project is designed to generate messages and route them through various servers using gRPC. The architecture includes several components like Prometheus for monitoring, ELK stack for logging, and more. The project was built for fun and to learn technologies.
-Project Architecture
-
-
+Generator component is a part of the ZmeyGorynych Project. 
+It generates messages at a specified interval and sends them to the router.
+The architecture includes several components like Prometheus for monitoring, ELK stack for logging, and more. 
+The project was built for fun and to learn technologies.
 
 Components
 Message Generator (zg_generator)
