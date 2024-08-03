@@ -1,12 +1,12 @@
 package telemetry
 
-import "go.uber.org/config"
+import cfg "go.uber.org/config"
 
 type Config struct {
 	Url string `yaml:"url"`
 }
 
-func NewMetricsConfig(provider config.Provider) (*Config, error) {
+func NewMetricsConfig(provider cfg.Provider) (*Config, error) {
 	var config Config
 	err := provider.Get("prometheus").Populate(&config)
 	if err != nil {

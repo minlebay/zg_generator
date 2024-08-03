@@ -1,12 +1,12 @@
 prometheus:
-  url: ${PROMETHEUS_URL}
+  url: ${PROMETHEUS_URL:localhost:21122}
 
 generator:
   interval: 10
   count: 1
 
 grpc_client:
-  router_address: ${GRPC_SERVER_LISTEN_ADDRESS}
+  router_address: ${GRPC_SERVER_LISTEN_ADDRESS:localhost:50051}
 
 logstash:
-    url: ${LOGSTASH_URL}
+    url: ${LOGSTASH_URL:http://localhost:5000}
